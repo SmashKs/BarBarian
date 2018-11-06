@@ -30,5 +30,5 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('admin/', admin.site.urls),
     # url(r'^', include(router.urls)),
-    url(r'^api-test/', include('api.urls'))
+    url(r'^api/', include('api.urls'))
 ]

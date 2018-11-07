@@ -30,6 +30,7 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     # url(r'^', include(router.urls)),
     url(r'^api/(?P<version>[v1|v2]+)/', include('api.urls')),
+    url(r'^api/news/(?P<version>[v1|v2]+)/', include('news.urls')),
     path('', RedirectView.as_view(url='/api/index'))
 ]
 

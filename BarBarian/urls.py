@@ -13,13 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.conf.urls import include, url
-from django.contrib import admin
+from django.conf.urls.static import static
 from django.urls import path
+from django.views.generic import RedirectView
 from rest_framework import routers
-
-# # Routers provide an easy way of automatically determining the URL conf.
-# from BarBarian.api.views import GroupViewSet, UserViewSet
 
 router = routers.DefaultRouter()
 # router.register(r'users', UserViewSet)
@@ -28,7 +27,11 @@ router = routers.DefaultRouter()
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # path('admin/', admin.site.urls),
     # url(r'^', include(router.urls)),
-    url(r'^api/', include('api.urls'))
+    url(r'^api/(?P<version>[v1|v2]+)/', include('api.urls')),
+    path('', RedirectView.as_view(url='/api/index'))
 ]
+
+# Use static() to add url mapping to serve static files during development (only)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

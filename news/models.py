@@ -1,3 +1,6 @@
+import json
+from collections import namedtuple
+
 from django.db import models
 from django.db.models import QuerySet
 
@@ -16,6 +19,24 @@ class News(models.Model):
 
     def __unicode__(self):  # type: (News) -> str
         return self.title
+
+    @staticmethod
+    def json_to_object(json_str):  # type: (str) -> News
+        def __json_object_hook(d):  # type: (dict) -> tuple
+            return namedtuple('new_obj', d.keys())(*d.values())
+
+        def __json2obj(data):  # type: (str) -> Any
+            return json.loads(data, object_hook=__json_object_hook)
+
+        obj = __json2obj(json_str)
+
+        return News(author=obj.author,
+                    title=obj.title,
+                    description=obj.description,
+                    url=obj.url,
+                    urlToImage=obj.urlToImage,
+                    published_at=obj.publishedAt,
+                    content=obj.content)
 
     @staticmethod
     def get_all():  # type: () -> QuerySet

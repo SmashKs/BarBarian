@@ -1,13 +1,16 @@
 import json
 from collections import namedtuple
+from sqlite3 import IntegrityError
+from typing import Any, List
 
+import django
 from django.db import models
 from django.db.models import QuerySet
 
 
 class News(models.Model):
     author = models.CharField(max_length=64, null=True, blank=True)
-    title = models.CharField(max_length=128, null=True, blank=True)
+    title = models.CharField(max_length=128, primary_key=True)
     country = models.CharField(max_length=2, blank=True)
     description = models.CharField(max_length=256, null=True, blank=True)
     url = models.CharField(max_length=512, null=True, blank=True)
@@ -37,6 +40,34 @@ class News(models.Model):
                     urlToImage=obj.urlToImage,
                     published_at=obj.publishedAt,
                     content=obj.content)
+
+    @staticmethod
+    def parse_dict(dict_news):  # type: (dict) -> List[News]
+        status = dict_news['status']
+        total = dict_news['totalResults']
+        articles = dict_news['articles']
+
+        def to_news_list(news):  # type: (dict) -> News
+            return News(author=news['author'],
+                        title=news['title'],
+                        description=news['description'],
+                        url=news['url'],
+                        urlToImage=news['urlToImage'],
+                        published_at=news['publishedAt'],
+                        content=news['content'])
+
+        return list(map(to_news_list, articles))
+
+    @staticmethod
+    def persist_to_database(list_news):  # type: (List[News]) -> None
+        for news in list_news:
+            try:
+                print(f'title: {news.title}, author: {news.author}')
+                news.save()
+            except IntegrityError as err:
+                print(f'Something wrong happened!\nerror: {err}')
+            except django.db.utils.IntegrityError as integrity_err:
+                print(f'Something internal wrong happened!\nerror: {integrity_err}')
 
     @staticmethod
     def get_all():  # type: () -> QuerySet

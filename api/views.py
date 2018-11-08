@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.views import View
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
-from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from api.models import TestData

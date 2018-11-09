@@ -1,11 +1,7 @@
-import json
-from collections import namedtuple
 from sqlite3 import IntegrityError
-from typing import Any, List
 
 import django
 from django.db import models
-from django.db.models import QuerySet
 
 
 class News(models.Model):
@@ -26,46 +22,46 @@ class News(models.Model):
     def __unicode__(self):  # type: (News) -> str
         return self.title
 
-    @staticmethod
-    def json_to_object(json_str):  # type: (str) -> News
-        def __json_object_hook(d):  # type: (dict) -> tuple
-            return namedtuple('new_obj', d.keys())(*d.values())
-
-        def __json2obj(data):  # type: (str) -> Any
-            return json.loads(data, object_hook=__json_object_hook)
-
-        obj = __json2obj(json_str)
-
-        return News(author=obj.author,
-                    title=obj.title,
-                    description=obj.description,
-                    url=obj.url,
-                    urlToImage=obj.urlToImage,
-                    published_at=obj.publishedAt,
-                    content=obj.content)
+    # @staticmethod
+    # def json_to_object(json_str):  # type: (str) -> News
+    #     def __json_object_hook(d):  # type: (dict) -> tuple
+    #         return namedtuple('new_obj', d.keys())(*d.values())
+    #
+    #     def __json2obj(data):  # type: (str) -> Any
+    #         return json.loads(data, object_hook=__json_object_hook)
+    #
+    #     obj = __json2obj(json_str)
+    #
+    #     return News(author=obj.author,
+    #                 title=obj.title,
+    #                 description=obj.description,
+    #                 url=obj.url,
+    #                 urlToImage=obj.urlToImage,
+    #                 published_at=obj.publishedAt,
+    #                 content=obj.content)
 
     @staticmethod
     def parse_dict(dict_news):  # type: (dict) -> List[News]
-        status = dict_news['status']
-        total = dict_news['totalResults']
+        # The data we don't need.
+        _ = dict_news['status']
+        _ = dict_news['totalResults']
+        # Only articles content we need!
         articles = dict_news['articles']
 
-        def to_news_list(news):  # type: (dict) -> News
-            return News(author=news['author'],
-                        title=news['title'],
-                        description=news['description'],
-                        url=news['url'],
-                        urlToImage=news['urlToImage'],
-                        published_at=news['publishedAt'],
-                        content=news['content'])
-
-        return list(map(to_news_list, articles))
+        return list(map(lambda news: News(author=news['author'],
+                                          title=news['title'],
+                                          description=news['description'],
+                                          url=news['url'],
+                                          urlToImage=news['urlToImage'],
+                                          published_at=news['publishedAt'],
+                                          content=news['content']),
+                        articles))
 
     @staticmethod
     def persist_to_database(list_news):  # type: (List[News]) -> None
         for news in list_news:
             try:
-                print(f'title: {news.title}, author: {news.author}')
+                print(f'persist the title of the data: {news.title}, author: {news.author}')
                 news.save()
             except IntegrityError as err:
                 print(f'Something wrong happened!\nerror: {err}')
@@ -81,8 +77,8 @@ class Sources(models.Model):
     s_id = models.CharField(max_length=128, null=True, blank=True)
     name = models.CharField(max_length=128, null=True, blank=True)
 
-    # class Meta:
-    #     db_table = 'news_source'
+    class Meta:
+        db_table = 'news_source'
 
     def __unicode__(self):  # type: (Sources) -> str
         return f'{self.s_id} {self.name}'

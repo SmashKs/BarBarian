@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.views import View
 from rest_framework import permissions
 from rest_framework.decorators import permission_classes
+from rest_framework.request import Request
 from rest_framework.views import APIView
 
 from api.models import TestData
@@ -18,6 +19,7 @@ class IndexView(View):
 @permission_classes((permissions.AllowAny,))
 class CourseListView(APIView):
     def get(self, request, *args, **kwargs):  # type: (CourseListView, Request, [], {}) -> JsonResponse
+        print(type(request))
         # Get api from url version.
         print(request.version)
         # 獲取版本管理的類

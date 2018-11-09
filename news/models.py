@@ -20,6 +20,9 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # class Meta:
+    #     db_table = 'news'
+
     def __unicode__(self):  # type: (News) -> str
         return self.title
 
@@ -77,6 +80,9 @@ class News(models.Model):
 class Sources(models.Model):
     s_id = models.CharField(max_length=128, null=True, blank=True)
     name = models.CharField(max_length=128, null=True, blank=True)
+
+    # class Meta:
+    #     db_table = 'news_source'
 
     def __unicode__(self):  # type: (Sources) -> str
         return f'{self.s_id} {self.name}'

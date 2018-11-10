@@ -1,7 +1,9 @@
 from sqlite3 import IntegrityError
+from typing import List
 
 import django
 from django.db import models
+from django.db.models import QuerySet
 
 
 class News(models.Model):
@@ -17,6 +19,7 @@ class News(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
+        app_label = 'news'
         db_table = 'news'
         unique_together = (('id', 'title'),)  # Set two primary keys together.
 

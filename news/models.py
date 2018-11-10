@@ -6,7 +6,7 @@ from django.db import models
 
 class News(models.Model):
     author = models.CharField(max_length=64, null=True, blank=True)
-    title = models.CharField(max_length=128, primary_key=True)
+    title = models.CharField(max_length=128)
     country = models.CharField(max_length=2, blank=True)
     description = models.CharField(max_length=256, null=True, blank=True)
     url = models.CharField(max_length=512, null=True, blank=True)
@@ -16,8 +16,9 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # class Meta:
-    #     db_table = 'news'
+    class Meta:
+        db_table = 'news'
+        unique_together = (('id', 'title'),)  # Set two primary keys together.
 
     def __unicode__(self):  # type: (News) -> str
         return self.title
@@ -78,7 +79,7 @@ class Sources(models.Model):
     name = models.CharField(max_length=128, null=True, blank=True)
 
     class Meta:
-        db_table = 'news_source'
+        db_table = 'news_sources'
 
     def __unicode__(self):  # type: (Sources) -> str
         return f'{self.s_id} {self.name}'

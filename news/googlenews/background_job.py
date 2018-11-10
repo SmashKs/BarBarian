@@ -1,7 +1,6 @@
 import time
 from threading import Thread
 
-from news.googlenews import IDLE_INTERVAL
 from news.googlenews.fetcher import Fetcher
 from news.models import News
 
@@ -28,7 +27,7 @@ class BackgroundJob(Thread):
         """
         while self.__signal:
             # Fetch the data from remote news server.
-            data = self._fetcher.top_headline()  # type: dict
+            data = self._fetcher.top_headline('jp')  # type: dict
 
             # Parsing news data and Persisting them into database.
             newses = News.parse_dict(data)  # type: list
@@ -36,5 +35,5 @@ class BackgroundJob(Thread):
 
             # Break time.
             self.__times += 1
-            time.sleep(IDLE_INTERVAL)
+            time.sleep(30)
             print(f'hello world!! I retrieved news - {self.__times}')

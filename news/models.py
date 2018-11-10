@@ -6,7 +6,7 @@ from django.db import models
 
 class News(models.Model):
     author = models.CharField(max_length=64, null=True, blank=True)
-    title = models.CharField(max_length=128)
+    title = models.CharField(max_length=128, unique=True)
     country = models.CharField(max_length=2, blank=True)
     description = models.CharField(max_length=256, null=True, blank=True)
     url = models.CharField(max_length=512, null=True, blank=True)
@@ -42,7 +42,7 @@ class News(models.Model):
     #                 content=obj.content)
 
     @staticmethod
-    def parse_dict(dict_news):  # type: (dict) -> List[News]
+    def parse_dict(dict_news, country):  # type: (dict, str) -> List[News]
         # The data we don't need.
         _ = dict_news['status']
         _ = dict_news['totalResults']
@@ -51,6 +51,7 @@ class News(models.Model):
 
         return list(map(lambda news: News(author=news['author'],
                                           title=news['title'],
+                                          country=country,
                                           description=news['description'],
                                           url=news['url'],
                                           urlToImage=news['urlToImage'],

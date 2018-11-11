@@ -23,7 +23,7 @@ from rest_framework import routers
 from news.api.views import NewsViewSet
 
 router = routers.DefaultRouter()
-router.register('^news', NewsViewSet)
+router.register(r'news', NewsViewSet)
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

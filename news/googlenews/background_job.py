@@ -6,6 +6,10 @@ from news.models import News
 
 
 class BackgroundJob(Thread):
+    """
+    Running on the background service for doing some jobs.
+    """
+
     def __init__(self):
         Thread.__init__(self)
 
@@ -14,6 +18,8 @@ class BackgroundJob(Thread):
 
         self.__signal = True
         self.__times = 0
+
+        self.__country_name = 'jp'
 
     def run(self):
         self.__retrieving_news()
@@ -27,13 +33,13 @@ class BackgroundJob(Thread):
         """
         while self.__signal:
             # Fetch the data from remote news server.
-            data = self._fetcher.top_headline('jp')  # type: dict
+            data = self._fetcher.top_headline(self.__country_name)  # type: dict
 
             # Parsing news data and Persisting them into database.
-            newses = News.parse_dict(data)  # type: list
+            newses = News.parse_dict(data, self.__country_name)  # type: list
             News.persist_to_database(newses)
 
             # Break time.
             self.__times += 1
-            time.sleep(30)
+            time.sleep(40)
             print(f'hello world!! I retrieved news - {self.__times}')

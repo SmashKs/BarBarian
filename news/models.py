@@ -19,8 +19,7 @@ class News(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        app_label = 'news'
-        db_table = 'news'
+        db_table = 'newses'
         unique_together = (('id', 'title'),)  # Set two primary keys together.
 
     def __unicode__(self):  # type: (News) -> str

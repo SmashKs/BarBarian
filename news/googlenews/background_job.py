@@ -1,8 +1,9 @@
 import time
 from threading import Thread
+from typing import List
 
 from news.googlenews.fetcher import Fetcher
-from news.models import News
+from news.models import News, Subscriber
 
 
 class BackgroundJob(Thread):
@@ -37,9 +38,26 @@ class BackgroundJob(Thread):
 
             # Parsing news data and Persisting them into database.
             newses = News.parse_dict(data, self.__country_name)  # type: list
-            News.persist_to_database(newses)
+
+            # region XXX(jieyi): 2018-11-11 to be a decorator.
+            data_not_in_database = self.__persist_news(newses)
+
+            for data in data_not_in_database:
+                self.__notify_subscribers(data, Subscriber.get_all_with_keywords())
+            # endregion
 
             # Break time.
             self.__times += 1
             time.sleep(40)
             print(f'hello world!! I retrieved news - {self.__times}')
+
+    def __persist_news(self, data):  # type: (BackgroundJob, List[News]) -> List[News]
+        return News.persist_to_database(data)
+
+    def __notify_subscribers(self, data, subscribers):  # type: (BackgroundJob, News, List[Subscriber]) -> None
+        text = f'{data.title} {data.content}'
+
+        for subscriber in subscribers:
+            if any(keyword in text for keyword in subscriber.keywords):
+                # TODO(jieyi): 2018-11-11 Send the News to the subscriber.
+                ...

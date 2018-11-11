@@ -14,7 +14,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BarBarian.settings')
 
 application = get_wsgi_application()
 
-# from news.googlenews import news_job
-#
-# # Run background jobs.
-# news_job.start()
+from news.googlenews import news_job
+
+# Run background jobs.
+news_job.start()

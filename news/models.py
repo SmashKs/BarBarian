@@ -62,22 +62,25 @@ class News(models.Model):
                         articles))
 
     @staticmethod
-    def persist_to_database(list_news):  # type: (List[News]) -> None
+    def persist_to_database(list_news):  # type: (List[News]) -> List[News]
+        new_list = list_news[:]  # type: List[News]
+
         for news in list_news:
             try:
                 print(f'persist the title of the data: {news.title}, author: {news.author}')
                 news.save()
-            except IntegrityError as err:
+            except (IntegrityError, django.db.utils.IntegrityError) as err:
+                new_list.remove(news)  # The news have already been in the DB then remove it.
                 print(f'Something wrong happened!\nerror: {err}')
-            except django.db.utils.IntegrityError as integrity_err:
-                print(f'Something internal wrong happened!\nerror: {integrity_err}')
+
+        return new_list
 
     @staticmethod
     def get_all():  # type: () -> QuerySet
         return News.objects.all()
 
 
-class Sources(models.Model):
+class Source(models.Model):
     s_id = models.CharField(max_length=128, null=True, blank=True)
     name = models.CharField(max_length=128, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -86,11 +89,11 @@ class Sources(models.Model):
     class Meta:
         db_table = 'news_sources'
 
-    def __unicode__(self):  # type: (Sources) -> str
+    def __unicode__(self):  # type: (Source) -> str
         return f'{self.s_id} {self.name}'
 
 
-class Users(models.Model):
+class Subscriber(models.Model):
     firebase_token = models.CharField(max_length=128)
     keywords = models.CharField(max_length=512, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -101,4 +104,14 @@ class Users(models.Model):
 
     @staticmethod
     def get_all():  # type: () -> QuerySet
-        return Users.objects.all()
+        return Subscriber.objects.all()
+
+    @staticmethod
+    def get_all_with_keywords():  # type: () -> List[Subscriber]
+        all_data = Subscriber.get_all()[:]
+
+        # Separate the keywords to a list.
+        for data in all_data:  # type: Subscriber
+            data.list_keyword = data.keywords.split(',')
+
+        return all_data

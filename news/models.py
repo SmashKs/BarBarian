@@ -80,9 +80,25 @@ class News(models.Model):
 class Sources(models.Model):
     s_id = models.CharField(max_length=128, null=True, blank=True)
     name = models.CharField(max_length=128, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'news_sources'
 
     def __unicode__(self):  # type: (Sources) -> str
         return f'{self.s_id} {self.name}'
+
+
+class Users(models.Model):
+    firebase_token = models.CharField(max_length=128)
+    keywords = models.CharField(max_length=512, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'subscribers'
+
+    @staticmethod
+    def get_all():  # type: () -> QuerySet
+        return Users.objects.all()

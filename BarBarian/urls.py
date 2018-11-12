@@ -18,12 +18,8 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.urls import path
 from django.views.generic import RedirectView
-from rest_framework import routers
 
-from news.api.views import NewsViewSet
-
-router = routers.DefaultRouter()
-router.register(r'news', NewsViewSet)
+from news.api.urls import router
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.

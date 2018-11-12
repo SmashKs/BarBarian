@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from news.models import News
+from news.models import News, Subscriber
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -15,5 +15,15 @@ class NewsSerializer(serializers.ModelSerializer):
                   'urlToImage',
                   'published_at',
                   'content',
+                  'created_at',
+                  'updated_at')
+
+
+class SubscriberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscriber
+        # fields = '__all__'
+        fields = ('firebase_token',
+                  'keywords',
                   'created_at',
                   'updated_at')

@@ -1,6 +1,6 @@
 astroid==2.0.4
 asttokens==1.1.13
-birdseye==0.7.2
+birdseye==0.8.0
 cached-property==1.5.1
 certifi==2018.10.15
 chardet==3.0.4
@@ -8,6 +8,7 @@ cheap-repr==0.2.0
 Click==7.0
 dataclasses-json==0.0.22
 Django==2.1.3
+django-compat==1.0.15
 django-filter==2.0.0
 djangorestframework==3.9.0
 Flask==1.0.2
@@ -26,10 +27,12 @@ marshmallow==3.0.0b20
 mccabe==0.6.1
 newsapi-python==0.2.3
 outdated==0.1.2
+pyfcm==1.4.5
 pylint==2.1.1
 pytz==2018.7
 qualname==0.1.0
 requests==2.20.0
+requests-toolbelt==0.8.0
 six==1.11.0
 SQLAlchemy==1.2.13
 urllib3==1.24.1

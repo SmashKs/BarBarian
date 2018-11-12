@@ -2,6 +2,9 @@ import time
 from threading import Thread
 from typing import List
 
+from pyfcm import FCMNotification
+
+from external import FIREBASE_API_KEY
 from news.googlenews.fetcher import Fetcher
 from news.models import News, Subscriber
 
@@ -21,6 +24,8 @@ class BackgroundJob(Thread):
         self.__times = 0
 
         self.__country_name = 'jp'
+
+        self.__push_service = FCMNotification(api_key=FIREBASE_API_KEY)
 
     def run(self):
         self.__retrieving_news()
@@ -56,8 +61,20 @@ class BackgroundJob(Thread):
 
     def __notify_subscribers(self, data, subscribers):  # type: (BackgroundJob, News, List[Subscriber]) -> None
         text = f'{data.title} {data.content}'
+        firebase_subscribers_token = []
 
         for subscriber in subscribers:
             if any(keyword in text for keyword in subscriber.keywords):
-                # TODO(jieyi): 2018-11-11 Send the News to the subscriber.
-                ...
+                firebase_subscribers_token.append(subscriber.firebase_token)
+
+        msg_data = {'title': 'Bullet News',
+                    'body': data.title,
+                    'author': data.author,
+                    'image_url': data.urlToImage,
+                    'new_url': data.url,
+                    'published_date': data.published_at}
+
+        if len(firebase_subscribers_token) == 0:
+            return
+
+        self.__push_service.notify_multiple_devices(registration_ids=firebase_subscribers_token, data_message=msg_data)

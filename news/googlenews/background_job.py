@@ -22,6 +22,7 @@ class BackgroundJob(Thread):
 
         self.__signal = True
         self.__times = 0
+        self.__idle_interval_time = 15 * 60  # 15 mins
 
         self.__country_name = 'jp'
 
@@ -53,7 +54,7 @@ class BackgroundJob(Thread):
 
             # Break time.
             self.__times += 1
-            time.sleep(40)
+            time.sleep(self.__idle_interval_time)
             print(f'hello world!! I retrieved news - {self.__times}')
 
     def __persist_news(self, data):  # type: (BackgroundJob, List[News]) -> List[News]

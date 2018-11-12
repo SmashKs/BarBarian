@@ -63,18 +63,20 @@ class BackgroundJob(Thread):
         text = f'{data.title} {data.content}'
         firebase_subscribers_token = []
 
+        # Collecting the subscribers who are interested in this news.
         for subscriber in subscribers:
             if any(keyword in text for keyword in subscriber.keywords):
                 firebase_subscribers_token.append(subscriber.firebase_token)
 
-        msg_data = {'title': 'Bullet News',
-                    'body': data.title,
-                    'author': data.author,
-                    'image_url': data.urlToImage,
-                    'new_url': data.url,
-                    'published_date': data.published_at}
-
+        # If there's no subscribers, just return.
         if len(firebase_subscribers_token) == 0:
             return
 
+        msg_data = {'title': 'Bullet News',
+                    'news_title': data.title,
+                    'news_body': data.description,
+                    'news_author': data.author,
+                    'image_url': data.urlToImage,
+                    'new_url': data.url,
+                    'published_date': data.published_at}
         self.__push_service.notify_multiple_devices(registration_ids=firebase_subscribers_token, data_message=msg_data)

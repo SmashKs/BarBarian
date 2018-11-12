@@ -2,7 +2,7 @@ from rest_framework import mixins, permissions
 from rest_framework.decorators import permission_classes
 from rest_framework.viewsets import GenericViewSet, ReadOnlyModelViewSet
 
-from news.models import News
+from news.models import News, Subscriber
 from news.serializers import NewsSerializer, SubscriberSerializer
 
 
@@ -25,4 +25,10 @@ class SubscriberViewSet(mixins.CreateModelMixin,
                         mixins.UpdateModelMixin,
                         mixins.DestroyModelMixin,
                         GenericViewSet):
+    queryset = Subscriber.objects.all()
     serializer_class = SubscriberSerializer
+
+    def put(self, request, *args, **kwargs):
+        # print(request.data)
+        # kwargs['pk'] = request.data['firebase_token']
+        return self.update(request, args, kwargs)

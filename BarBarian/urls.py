@@ -28,7 +28,7 @@ urlpatterns = [
     # url(r'^', include(router.urls)),
     # url(r'^api/(?P<version>[v1|v2]+)/', include('api.urls')),
     # url(r'^api/news/(?P<version>[v1|v2]+)/', include('news.urls')),
-    url(r'^test/', include(router.urls)),
+    url(r'^api/news/(?P<version>[v1|v2]+)/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('', RedirectView.as_view(url='/api/index')),
 ]

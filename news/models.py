@@ -94,6 +94,7 @@ class Source(models.Model):
 
 
 class Subscriber(models.Model):
+    token = models.CharField(max_length=128, primary_key=True, null=False)
     firebase_token = models.CharField(max_length=128, unique=True)
     keywords = models.CharField(max_length=512, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

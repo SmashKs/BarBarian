@@ -23,7 +23,8 @@ class SubscriberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subscriber
         # fields = '__all__'
-        fields = ('firebase_token',
+        fields = ('token',
+                  'firebase_token',
                   'keywords',
                   'created_at',
                   'updated_at')

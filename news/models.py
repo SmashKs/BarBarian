@@ -1,10 +1,12 @@
-import datetime
+import logging
 from sqlite3 import IntegrityError
 from typing import List
 
 import django
 from django.db import models
 from django.db.models import QuerySet
+
+from log.logger import Logger
 
 
 class News(models.Model):
@@ -65,16 +67,21 @@ class News(models.Model):
     @staticmethod
     def persist_to_database(list_news):  # type: (List[News]) -> List[News]
         new_list = list_news[:]  # type: List[News]
+        Logger.create_log_file(Logger.get_today())  # Create new log for today.
 
         for news in list_news:
             try:
-                print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} '
-                      f'persist the title of the data: {news.title}, author: {news.author}')
                 news.save()
 
+                info_msg = f'persist the title of the data: {news.title}, author: {news.author}'
+                logging.info(info_msg)
+                print('debug ->', info_msg)
             except (IntegrityError, django.db.utils.IntegrityError) as err:
                 new_list.remove(news)  # The news have already been in the DB then remove it.
-                print(f'error: Something wrong happened! → {err}')
+
+                err_msg = f'data: {news.title} <- {err}'
+                logging.error(err_msg)
+                print('error ->', err_msg)
 
         return new_list
 

@@ -10,11 +10,14 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+from log.logger import Logger
+from news.googlenews import news_job
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'BarBarian.settings')
 
 application = get_wsgi_application()
 
-from news.googlenews import news_job
+Logger.basic_setting()
 
 # Run background jobs.
 news_job.start()

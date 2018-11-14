@@ -46,9 +46,9 @@ class BackgroundJob(Thread):
             newses = News.parse_dict(data, self.__country_name)  # type: list
 
             # region XXX(jieyi): 2018-11-11 to be a decorator.
-            data_not_in_database = self.__persist_news(newses)
+            data_not_in_database = self.__persist_news(newses)  # type: List[News]
 
-            for data in data_not_in_database:
+            for data in data_not_in_database:  # type: News
                 self.__notify_subscribers(data, Subscriber.get_all_with_keywords())
             # endregion
 

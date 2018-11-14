@@ -1,3 +1,4 @@
+import datetime
 from sqlite3 import IntegrityError
 from typing import List
 
@@ -67,11 +68,13 @@ class News(models.Model):
 
         for news in list_news:
             try:
-                print(f'persist the title of the data: {news.title}, author: {news.author}')
+                print(f'{datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")} '
+                      f'persist the title of the data: {news.title}, author: {news.author}')
                 news.save()
+
             except (IntegrityError, django.db.utils.IntegrityError) as err:
                 new_list.remove(news)  # The news have already been in the DB then remove it.
-                print(f'Something wrong happened!\nerror: {err}')
+                print(f'error: Something wrong happened! → {err}')
 
         return new_list
 

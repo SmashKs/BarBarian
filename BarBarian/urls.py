@@ -20,9 +20,10 @@ from django.urls import path
 from django.views.generic import RedirectView
 
 from news.api.urls import router
-
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
+from news.tasks import background_fetch_news
+
 urlpatterns = [
     # path('admin/', admin.site.urls),
     # url(r'^', include(router.urls)),
@@ -35,3 +36,7 @@ urlpatterns = [
 
 # Use static() to add url mapping to serve static files during development (only)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+# Run background jobs.
+# news_job.start()
+background_fetch_news.delay()

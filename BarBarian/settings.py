@@ -29,7 +29,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -131,3 +131,7 @@ REST_FRAMEWORK = {
     'ALLOWED_VERSIONS': ['v1', 'v2'],  # Current allow version list.
     'VERSION_PARAM': 'version',  # Get version key from url.
 }
+
+CELERY_BROKER_URL = 'redis://localhost'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'

@@ -34,6 +34,9 @@ class BackgroundJob(Thread):
     def stop(self):
         self.__signal = False
 
+    def celery_background(self):
+        self.__retrieving_news()
+
     def __retrieving_news(self):
         """
         Forever loop for retrieving all news data from remote server.

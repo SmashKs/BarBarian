@@ -75,13 +75,11 @@ class News(models.Model):
 
                 info_msg = f'persist the title of the data: {news.title}, author: {news.author}'
                 logging.info(info_msg)
-                print('debug ->', info_msg)
             except (IntegrityError, django.db.utils.IntegrityError) as err:
                 new_list.remove(news)  # The news have already been in the DB then remove it.
 
                 err_msg = f'data: {news.title} <- {err}'
                 logging.error(err_msg)
-                print('error ->', err_msg)
 
         return new_list
 

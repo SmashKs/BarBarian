@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-ps auxww | grep 'celery worker' | awk '{print $2}' | xargs kill -9
+ps auxww | grep 'BarBarian worker' | awk '{print $2}' | xargs kill -9

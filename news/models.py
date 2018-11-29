@@ -121,6 +121,7 @@ class Subscriber(models.Model):
 
         # Separate the keywords to a list.
         for data in all_data:  # type: Subscriber
-            data.list_keyword = data.keywords.split(',')
+            if data.keywords:
+                data.list_keyword = data.keywords.split(',')
 
         return all_data

@@ -70,7 +70,7 @@ class BackgroundJob(Thread):
 
         # Collecting the subscribers who are interested in this news.
         for subscriber in subscribers:
-            if any(keyword in text for keyword in subscriber.keywords):
+            if subscriber.keywords and any(keyword in text for keyword in subscriber.keywords):
                 firebase_subscribers_token.append(subscriber.firebase_token)
 
         # If there's no subscribers, just return.

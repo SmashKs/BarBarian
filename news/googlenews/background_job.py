@@ -43,6 +43,7 @@ class BackgroundJob(Thread):
         Forever loop for retrieving all news data from remote server.
         """
         while self.__signal:
+            self._fetcher = Fetcher()  # Do refresh the object!?
             # Fetch the data from remote news server.
             data = self._fetcher.top_headline(self.__country_name)  # type: dict
 

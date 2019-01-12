@@ -1,3 +1,5 @@
+from pprint import pprint as pp
+
 from newsapi import NewsApiClient
 
 from external import NEWS_API_KEY
@@ -14,3 +16,9 @@ class Fetcher:
         :return: dict
         """
         return self.__news_api.get_top_headlines(country=country, page_size=60)
+
+
+if __name__ == '__main__':
+    f = Fetcher()
+    res = f.top_headline()
+    pp(res)

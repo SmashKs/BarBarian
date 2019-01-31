@@ -7,6 +7,7 @@ from django.db import models
 from django.db.models import QuerySet
 
 from log.logger import Logger
+from log.slack_sender import SlackBot
 
 
 class News(models.Model):
@@ -73,12 +74,14 @@ class News(models.Model):
             try:
                 news.save()
 
-                info_msg = f'persist the title of the data: {news.title}, author: {news.author}'
+                info_msg = f'persist the title of the data:\n {news.title}, author: {news.author}'
+                SlackBot().send_msg_to(info_msg)
                 logging.info(info_msg)
             except (IntegrityError, django.db.utils.IntegrityError) as err:
                 new_list.remove(news)  # The news have already been in the DB then remove it.
 
                 err_msg = f'data: {news.title} <- {err}'
+                SlackBot().send_msg_to(err_msg)
                 logging.error(err_msg)
 
         return new_list
